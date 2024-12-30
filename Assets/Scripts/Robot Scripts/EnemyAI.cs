@@ -78,10 +78,6 @@ public class EnemyAI : MonoBehaviour
 
     void Patrol()
     {
-        Debug.Log($"Patrol: Current Target Waypoint Index: {targetWaypoint}");
-        Debug.Log($"Patrol: Setting Destination to: {waypoints[targetWaypoint].position}");
-        Debug.Log("Distance to waypoint: " + Vector3.Distance(agent.transform.position, waypoints[targetWaypoint].position));
-
         agent.speed = 3;
         agent.destination = waypoints[targetWaypoint].position;
 
