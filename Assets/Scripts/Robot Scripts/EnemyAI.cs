@@ -75,19 +75,23 @@ public class EnemyAI : MonoBehaviour
         agent.destination = lastPosition;
     }
 
-    
+
     void Patrol()
     {
+        Debug.Log($"Patrol: Current Target Waypoint Index: {targetWaypoint}");
+        Debug.Log($"Patrol: Setting Destination to: {waypoints[targetWaypoint].position}");
+        Debug.Log("Distance to waypoint: " + Vector3.Distance(agent.transform.position, waypoints[targetWaypoint].position));
+
         agent.speed = 3;
         agent.destination = waypoints[targetWaypoint].position;
 
         if (Vector3.Distance(agent.transform.position, waypoints[targetWaypoint].position) < waypointThreshold)
         {
-            Debug.Log("Current waypoint: " + targetWaypoint);
+            Debug.Log($"Patrol: Reached waypoint {targetWaypoint}");
             targetWaypoint++;
             if (targetWaypoint >= waypoints.Length)
             {
-                targetWaypoint = 0;
+                targetWaypoint = 0; // Loop back to the first waypoint
             }
         }
     }

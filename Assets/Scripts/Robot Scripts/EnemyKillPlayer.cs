@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemyKillPlayer : MonoBehaviour
 {
-    public string playerTag = "Player"; // Tag the player GameObject with "Player"
+    public LayerMask playerLayer;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider triggerObject)
     {
-        if (other.CompareTag(playerTag))
+        if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0) //binary check layerja
         {
             KillPlayer();
         }
@@ -16,7 +16,6 @@ public class EnemyKillPlayer : MonoBehaviour
 
     private void KillPlayer()
     {
-        // Add your kill logic here (e.g., play animation, reduce health, restart level)
         Debug.Log("Player killed!");
     }
 }
