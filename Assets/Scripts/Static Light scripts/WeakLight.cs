@@ -7,61 +7,76 @@ public class WeakLight : MonoBehaviour
     [Header("References")]
     public LayerMask playerLayer;
     private CapsuleCollider detectionCollider;
-    public Light lightSource; // Reference to the child light
+    public Light lightSource;
+    public Transform detectionZone;
 
     [Header("States")]
-    public bool isLightOn = false;
-    public bool isDetected = false;
+    private bool isLightOn = false;
+    private bool isPlayerInZone = false;
+
 
     void Start()
     {
-        // Find the CapsuleCollider in the child object
-        detectionCollider = GetComponentInChildren<CapsuleCollider>();
-
+        detectionCollider = detectionZone.GetComponent<CapsuleCollider>();
         detectionCollider.isTrigger = true;
 
-        // Find the light component
-        lightSource = GetComponentInChildren<Light>();
+        if (detectionCollider == null)
+        {
+            Debug.LogError("No CapsuleCollider found on detectionZone!");
+        }
 
-        ToggleLight(false);
+        SetLightState(false);
     }
 
     void Update()
     {
-        // Example: Toggle the light every 2 seconds
-        if (Time.time % 4 < 2)
+        LightInterval();
+        DetectPlayer();
+        Debug.Log("IsPlayerInZone= " + isPlayerInZone);
+    }
+
+    void OnTriggerEnter(Collider triggerObject)
+    {
+        if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
         {
-            if (!isLightOn) ToggleLight(true);
-        }
-        else
-        {
-            if (isLightOn) ToggleLight(false);
+            isPlayerInZone = true;
         }
     }
 
-    private void OnTriggerEnter(Collider triggerObject)
+    private void OnTriggerExit(Collider triggerObject)
     {
-        if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0 && isLightOn) //binary check layerja
+        if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
+        {
+            isPlayerInZone = false;
+        }
+    }
+
+    private void DetectPlayer()
+    {
+        if(isPlayerInZone && isLightOn)
         {
             NotifyRobot();
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void LightInterval() //bolj zakompliciraj
     {
-        if (((1 << other.gameObject.layer) & playerLayer) != 0)
+        if (Time.time % 4 < 2)
         {
-            isDetected = false;
+            if (!isLightOn) SetLightState(true);
+        }
+        else
+        {
+            if (isLightOn) SetLightState(false);
         }
     }
 
     private void NotifyRobot()
     {
         Debug.Log("Player detected in light! Notify the robot.");
-        // Add logic to send the player's position to the robot
     }
 
-    private void ToggleLight(bool state)
+    private void SetLightState(bool state)
     {
         isLightOn = state;
         if (lightSource != null)
