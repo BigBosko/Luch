@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 public class FirstPersonController : MonoBehaviour
 {
     [Header("References")]
-    private CharacterController controller;
     public Transform Orientation;
+    Rigidbody rb;
 
     [Header("Movement Settings")]
     [SerializeField] private float walkMoveSpeed;
@@ -13,13 +12,13 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private float crouchMoveSpeed;
     [SerializeField] private float crouchSprintMoveSpeed;
     [SerializeField] private float sprintTransitionSpeed;
-    [SerializeField] private float gravity = 9.81f;
+    [SerializeField] private float groundDrag;
 
     [Header("Input")]
     private float horizontalInput;
     private float verticalInput;
 
-    private float speed;
+    private float moveSpeed;
     private Vector3 moveDirection;
     private float verticalVelocity;
 
@@ -29,8 +28,9 @@ public class FirstPersonController : MonoBehaviour
 
     private void Start()
     {
-        controller = GetComponent<CharacterController>();
-        speed = walkMoveSpeed;
+        moveSpeed = walkMoveSpeed;
+        rb = GetComponent<Rigidbody>();
+
     }
 
     private void Update()
@@ -39,6 +39,7 @@ public class FirstPersonController : MonoBehaviour
         MovePlayer();
         RotatePlayer();
         HandleSpeed();
+        VelocityControl();
     }
 
     private void GetInput()
@@ -50,23 +51,9 @@ public class FirstPersonController : MonoBehaviour
     private void MovePlayer()
     {
         moveDirection = Orientation.forward * verticalInput + Orientation.right * horizontalInput;
-        moveDirection = moveDirection.normalized * speed;
-        moveDirection.y = CalculateVerticalVelocity();
 
-        controller.Move(moveDirection * Time.deltaTime);
-    }
-
-    private float CalculateVerticalVelocity()
-    {
-        if (controller.isGrounded)
-        {
-            verticalVelocity = -1f; // Prevent floating when grounded
-        }
-        else
-        {
-            verticalVelocity -= gravity * Time.deltaTime;
-        }
-        return verticalVelocity;
+        rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        rb.drag = groundDrag;
     }
 
     private void RotatePlayer()
@@ -75,24 +62,35 @@ public class FirstPersonController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, cameraRotation.y + 180f, 0);
     }
 
+    private void VelocityControl()
+    {
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        if (flatVel.magnitude > moveSpeed)
+        {
+            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+        }
+    }
     private void HandleSpeed()
     {
         if (staminaController.CanSprint && Input.GetKey(KeyCode.LeftShift) && crouchController.IsCrouching)
         {
-            speed = Mathf.Lerp(speed, crouchSprintMoveSpeed, sprintTransitionSpeed * Time.deltaTime);
+            moveSpeed = Mathf.Lerp(moveSpeed, crouchSprintMoveSpeed, sprintTransitionSpeed * Time.deltaTime);
         }
         
         else if (staminaController.CanSprint && Input.GetKey(KeyCode.LeftShift))
         {
-            speed = Mathf.Lerp(speed, sprintMoveSpeed, sprintTransitionSpeed * Time.deltaTime);
+            moveSpeed = Mathf.Lerp(moveSpeed, sprintMoveSpeed, sprintTransitionSpeed * Time.deltaTime);
         }
         else if (crouchController.IsCrouching)
         {
-            speed = Mathf.Lerp(speed, crouchMoveSpeed, crouchController.CrouchSpeed * Time.deltaTime);
+            moveSpeed = Mathf.Lerp(moveSpeed, crouchMoveSpeed, crouchController.CrouchSpeed * Time.deltaTime);
         }
         else
         {
-            speed = Mathf.Lerp(speed, walkMoveSpeed, sprintTransitionSpeed * Time.deltaTime);
+            moveSpeed = Mathf.Lerp(moveSpeed, walkMoveSpeed, sprintTransitionSpeed * Time.deltaTime);
         }
+
+
     }
 }
