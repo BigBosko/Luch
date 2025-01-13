@@ -13,7 +13,7 @@ public class Crouch : MonoBehaviour
     [SerializeField] private float crouchHeight = 1f;
 
     private Vector3 normalScale;
-    private Vector3 crouchScale = new Vector3(0.7f, 0.5f, 0.7f);
+    private Vector3 crouchScale = new Vector3(1f, 0.5f, 1f);
 
     public bool IsCrouching { get; private set; }
 
@@ -24,6 +24,7 @@ public class Crouch : MonoBehaviour
         playerCollider = GetComponent<CapsuleCollider>();
         normalScale = transform.localScale;
 
+        IsCrouching = false;
         Debug.Log(transform.localScale);
     }
 
@@ -46,10 +47,20 @@ public class Crouch : MonoBehaviour
         Vector3 targetScale = IsCrouching ? crouchScale : normalScale;
         float targetHeight = IsCrouching ? crouchHeight : normalHeight;
 
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, crouchSpeed * Time.deltaTime);
-
+        if(transform.localScale != targetScale)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, crouchSpeed * Time.deltaTime);
+        
+            if(Vector3.Distance(transform.localScale, targetScale) < 0.01)
+            {
+                transform.localScale = targetScale;
+            }
+        
+        }
+        
         playerCollider.height = Mathf.Lerp(playerCollider.height, targetHeight, crouchSpeed * Time.deltaTime);
-        playerCollider.center = new Vector3(playerCollider.center.x, Mathf.Lerp(playerCollider.center.y, targetHeight / 2f, crouchSpeed * Time.deltaTime), playerCollider.center.z);
+
+        playerCollider.center = new Vector3(playerCollider.center.x, Mathf.Lerp(playerCollider.center.y/2, targetHeight / 2f, crouchSpeed * Time.deltaTime), playerCollider.center.z);
     }
 }
 
