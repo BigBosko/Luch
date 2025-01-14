@@ -8,17 +8,15 @@ public class WeakLight : MonoBehaviour
     public LayerMask playerLayer;
     private CapsuleCollider detectionCollider;
     public Light lightSource;
-    public Transform detectionZone;
 
     [Header("States")]
     private bool isLightOn = false;
     private bool isPlayerInZone = false;
 
-
     void Start()
     {
-        detectionCollider = detectionZone.GetComponent<CapsuleCollider>();
-        detectionCollider.isTrigger = true;
+        detectionCollider = GetComponentInChildren<CapsuleCollider>();
+        detectionCollider.isTrigger = true; 
 
         if (detectionCollider == null)
         {
@@ -32,42 +30,68 @@ public class WeakLight : MonoBehaviour
     {
         LightInterval();
         DetectPlayer();
-        Debug.Log("IsPlayerInZone= " + isPlayerInZone);
+        Debug.Log("IsPlayerInZone= " + isPlayerInZone + " | Light is " + (isLightOn ? "ON" : "OFF"));
     }
 
     void OnTriggerEnter(Collider triggerObject)
     {
+
         if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
         {
+            Debug.Log("Player detected in the detection zone!");
             isPlayerInZone = true;
+        }
+        else
+        {
+            Debug.Log("Non-player object detected.");
         }
     }
 
     private void OnTriggerExit(Collider triggerObject)
     {
+        // Debug log for checking when an object exits the trigger
+        Debug.Log("Trigger Exited: " + triggerObject.gameObject.name);
+        Debug.Log("Trigger Object Layer: " + triggerObject.gameObject.layer);
+
         if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
         {
+            // When the player exits the detection zone
+            Debug.Log("Player left the detection zone.");
             isPlayerInZone = false;
+        }
+        else
+        {
+            Debug.Log("Non-player object left the detection zone.");
         }
     }
 
     private void DetectPlayer()
     {
-        if(isPlayerInZone && isLightOn)
+        if (isPlayerInZone && isLightOn)
         {
             NotifyRobot();
         }
     }
 
-    private void LightInterval() //bolj zakompliciraj
+    private void LightInterval()
     {
-        if (Time.time % 4 < 2)
+        float intervalTime = Time.time % 4;
+
+        if (intervalTime < 2)
         {
-            if (!isLightOn) SetLightState(true);
+            if (!isLightOn)
+            {
+                SetLightState(true);
+                Debug.Log("Light turned ON.");
+            }
         }
         else
         {
-            if (isLightOn) SetLightState(false);
+            if (isLightOn)
+            {
+                SetLightState(false);
+                Debug.Log("Light turned OFF.");
+            }
         }
     }
 
