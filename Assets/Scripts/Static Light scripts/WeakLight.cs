@@ -16,15 +16,16 @@ public class WeakLight : MonoBehaviour
     void Start()
     {
         detectionCollider = GetComponentInChildren<CapsuleCollider>();
-        detectionCollider.isTrigger = true; 
 
         if (detectionCollider == null)
         {
             Debug.LogError("No CapsuleCollider found on detectionZone!");
         }
 
+        detectionCollider.isTrigger = true;
         SetLightState(false);
     }
+
 
     void Update()
     {
@@ -35,7 +36,7 @@ public class WeakLight : MonoBehaviour
 
     void OnTriggerEnter(Collider triggerObject)
     {
-
+        Debug.Log("Player detected in the detection zone!");
         if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
         {
             Debug.Log("Player detected in the detection zone!");
@@ -49,9 +50,7 @@ public class WeakLight : MonoBehaviour
 
     private void OnTriggerExit(Collider triggerObject)
     {
-        // Debug log for checking when an object exits the trigger
-        Debug.Log("Trigger Exited: " + triggerObject.gameObject.name);
-        Debug.Log("Trigger Object Layer: " + triggerObject.gameObject.layer);
+        Debug.Log("Player left the detection zone.");
 
         if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
         {

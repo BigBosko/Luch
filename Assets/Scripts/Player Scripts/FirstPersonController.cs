@@ -13,18 +13,23 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private float crouchSprintMoveSpeed;
     [SerializeField] private float sprintTransitionSpeed;
     [SerializeField] private float groundDrag;
+    [SerializeField] private float airMultiplier;
 
     [Header("Input")]
     private float horizontalInput;
     private float verticalInput;
 
-    private float moveSpeed;
-    private Vector3 moveDirection;
-    private float verticalVelocity;
+    [Header("GroundCheck")]
+    public float playerHeight;
+    private bool isGrounded;
 
     [Header("State Controllers")]
     public StaminaControll staminaController;
     public Crouch crouchController;
+
+    private float moveSpeed;
+    private Vector3 moveDirection;
+
 
     private void Start()
     {
@@ -38,6 +43,7 @@ public class FirstPersonController : MonoBehaviour
         GetInput();
         MovePlayer();
         RotatePlayer();
+        GroundCheck();
         HandleSpeed();
         VelocityControl();
     }
@@ -52,14 +58,22 @@ public class FirstPersonController : MonoBehaviour
     {
         moveDirection = Orientation.forward * verticalInput + Orientation.right * horizontalInput;
 
-        rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        rb.drag = groundDrag;
+        if (isGrounded)
+        {
+            rb.drag = groundDrag;
+            rb.AddForce(moveDirection.normalized * moveSpeed * rb.mass, ForceMode.Force);
+        }
+        else
+        {
+            rb.drag = 0;
+            rb.AddForce(moveDirection.normalized * moveSpeed * rb.mass * airMultiplier, ForceMode.Force);
+        }
     }
 
     private void RotatePlayer()
     {
         Vector3 cameraRotation = Camera.main.transform.eulerAngles;
-        transform.rotation = Quaternion.Euler(0, cameraRotation.y + 180f, 0);
+        transform.rotation = Quaternion.Euler(0, cameraRotation.y, 0);
     }
 
     private void VelocityControl()
@@ -91,6 +105,11 @@ public class FirstPersonController : MonoBehaviour
             moveSpeed = Mathf.Lerp(moveSpeed, walkMoveSpeed, sprintTransitionSpeed * Time.deltaTime);
         }
 
-
     }
+
+    private void GroundCheck()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.1f);
+    }
+
 }
