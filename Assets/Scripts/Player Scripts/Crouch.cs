@@ -17,7 +17,7 @@ public class Crouch : MonoBehaviour
     private Vector3 crouchScale = new Vector3(1f, 0.5f, 1f);
 
     public bool IsCrouching { get; private set; }
-
+    //
     public float CrouchSpeed => crouchSpeed;
 
     private void Start()
