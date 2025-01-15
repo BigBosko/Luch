@@ -15,7 +15,7 @@ public class WeakLight : MonoBehaviour
 
     void Start()
     {
-        detectionCollider = GetComponentInChildren<CapsuleCollider>();
+        detectionCollider = GetComponent<CapsuleCollider>();
 
         if (detectionCollider == null)
         {
@@ -36,7 +36,6 @@ public class WeakLight : MonoBehaviour
 
     void OnTriggerEnter(Collider triggerObject)
     {
-        Debug.Log("Player detected in the detection zone!");
         if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
         {
             Debug.Log("Player detected in the detection zone!");
