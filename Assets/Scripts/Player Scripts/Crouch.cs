@@ -1,39 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Crouch : MonoBehaviour
 {
     [Header("References")]
     private CapsuleCollider playerCollider;
+    private Rigidbody rb;
 
     [Header("Crouch Settings")]
-    [SerializeField] private float crouchSpeed = 5f;
-    [SerializeField] private float normalHeight = 2f;
-    [SerializeField] private float crouchHeight = 1.2f;
+    public float crouchSpeed = 5f;
+    private float normalHeight = 1f;
+    private float normalColliderHeight;
+    private float crouchColliderHeight;
+    private float crouchHeight;
 
 
     private Vector3 normalScale; //se dinamicno nastavi v start();
-    private Vector3 crouchScale = new Vector3(1f, 0.5f, 1f);
+    private Vector3 crouchScale; //se dinamicno nastavi v start();
 
     public bool IsCrouching { get; private set; }
-    //
     public float CrouchSpeed => crouchSpeed;
 
     private void Start()
     {
         playerCollider = GetComponent<CapsuleCollider>();
+        rb = GetComponent<Rigidbody>();
+
         normalScale = transform.localScale;
+        crouchScale = new Vector3(normalScale.x, normalScale.y * 0.6f, normalScale.z);
+        crouchHeight = normalHeight * 0.6f;
+        normalColliderHeight = normalHeight * 2f;
+        crouchColliderHeight = crouchHeight * 3.4f;
+
+        Debug.Log("crouchColliderHeight: " + crouchColliderHeight);
+        Debug.Log("crouch height: " + crouchHeight);
 
         IsCrouching = false;
-        Debug.Log(transform.localScale);
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            ToggleCrouch();
+            if (IsCrouching)
+            {
+                if (UnCrouchCheck()) ToggleCrouch();
+            }
+            else ToggleCrouch();
         }
         UpdateHeight();
     }
@@ -45,24 +57,19 @@ public class Crouch : MonoBehaviour
 
     private void UpdateHeight()
     {
-        Vector3 targetScale = IsCrouching ? crouchScale : normalScale;
+        float targetColliderHeight = IsCrouching ? crouchColliderHeight : normalColliderHeight;
         float targetHeight = IsCrouching ? crouchHeight : normalHeight;
 
-        if (transform.localScale != targetScale)
-        {
-            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, crouchSpeed * Time.deltaTime);
+        transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(normalScale.x, targetHeight, normalScale.z), crouchSpeed * Time.deltaTime);
+        playerCollider.height = Mathf.Lerp(playerCollider.height, targetColliderHeight, crouchSpeed * Time.deltaTime);
+    }
 
-            if (Vector3.Distance(transform.localScale, targetScale) < 0.01)
-            {
-                transform.localScale = targetScale;
-            }
+    private bool UnCrouchCheck()
+    {
+        Debug.DrawRay(transform.position + playerCollider.center, Vector3.up * (normalHeight / 2f + 0.01f), Color.red, 2f);
+        if (Physics.Raycast(transform.position + playerCollider.center, Vector3.up, normalHeight / 2f + 0.01f)) return false;
+        else return true;
 
-        }
-
-
-        playerCollider.height = Mathf.Lerp(playerCollider.height, targetHeight, crouchSpeed * Time.deltaTime);
-
-        playerCollider.center = new Vector3(playerCollider.center.x, Mathf.Lerp(playerCollider.center.y / 2, targetHeight / 2, crouchSpeed * Time.deltaTime), playerCollider.center.z);
     }
 }
 
