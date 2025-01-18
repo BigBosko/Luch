@@ -20,7 +20,7 @@ public class FirstPersonController : MonoBehaviour
     private float verticalInput;
 
     [Header("GroundCheck")]
-    public float playerHeight;
+    public float playerHeight ;
     private bool isGrounded;
 
     [Header("State Controllers")]
@@ -61,12 +61,12 @@ public class FirstPersonController : MonoBehaviour
         if (isGrounded)
         {
             rb.drag = groundDrag;
-            rb.AddForce(moveDirection.normalized * moveSpeed * rb.mass, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         }
         else
         {
             rb.drag = 0;
-            rb.AddForce(moveDirection.normalized * moveSpeed * rb.mass * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier * 10f, ForceMode.Force);
         }
     }
 
