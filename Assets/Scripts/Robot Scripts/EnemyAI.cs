@@ -10,7 +10,8 @@ public class EnemyAI : MonoBehaviour
     public Transform[] waypoints;
     public NavMeshAgent agent;
     public int targetWaypoint;
-    public float waypointThreshold;
+    public float waypointThreshold; //robot height *0.5 + buffer
+    public float patrolSpeed;
 
     [Header("Detection")]
     public float detectionDistance;  // Distance the cone can detect
@@ -25,6 +26,7 @@ public class EnemyAI : MonoBehaviour
     public Vector3 lastPosition;
     public bool isChasing;
     public float lastPositionTreshold;
+    public float chaseSpeed;
 
     /*[Header("Scouting")]
     public float scoutDuration = 5f;
@@ -66,7 +68,7 @@ public class EnemyAI : MonoBehaviour
     
     void Chase()
     {
-        agent.speed = 4;
+        agent.speed = chaseSpeed;
         if (Vector3.Distance(agent.transform.position, lastPosition) <= lastPositionTreshold)
         {
             isChasing = false;
@@ -78,7 +80,7 @@ public class EnemyAI : MonoBehaviour
 
     void Patrol()
     {
-        agent.speed = 3;
+        agent.speed = patrolSpeed;
         agent.destination = waypoints[targetWaypoint].position;
 
         if (Vector3.Distance(agent.transform.position, waypoints[targetWaypoint].position) < waypointThreshold)
