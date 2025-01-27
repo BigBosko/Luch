@@ -5,14 +5,13 @@ using UnityEngine;
 public class PickUpItemInHand : MonoBehaviour
 {
     [Header("References")]
-    public LayerMask itemLayer;
+    public InteractionHandler InteractionHandler;  // Reference to the InteractionHandler
     public Transform equipPos;
-    public Camera cam;
     GameObject currentItem;
     GameObject wp;
 
     [Header("Pick up settings")]
-    [SerializeField] private float maxPickUpDistance;
+    [SerializeField] private float PickUpDistance;
 
     [Header("Inventory settings")]
     [SerializeField] private int currentIndex;
@@ -24,61 +23,48 @@ public class PickUpItemInHand : MonoBehaviour
 
     void Update()
     {
-        canGrab = detectPickable();
+        Interactable interactable = InteractionHandler.GetDetectedInteractable(); // Get the detected interactable
+        canGrab = (interactable != null && interactable is PickableItem); // Ensure the interactable is a PickableItem
 
-        if (canGrab)
+        if (canGrab && Input.GetKeyDown(KeyCode.E))
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                SetInInventory(); // Pick up item
-            }
+            wp = interactable.gameObject;  // Set wp to the detected interactable's GameObject
+            SetInInventory(); // Pick up the item
         }
 
-        if (currentItem != null)
+        if (currentItem != null && Input.GetKeyDown(KeyCode.Q))
         {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                Drop(); // Drop currently held item
-            }
+            Drop(); // Drop the currently held item
         }
 
-        changeSlot(); // Switch between slots when the number keys are pressed
-    }
-
-    bool detectPickable()
-    {
-        RaycastHit hit;
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, maxPickUpDistance))
-        {
-            if ((itemLayer.value & (1 << hit.transform.gameObject.layer)) > 0 && hit.transform.gameObject != currentItem)
-            {
-                wp = hit.transform.gameObject;
-                return true;
-            }
-        }
-        return false;
+        changeSlot(); // Switch between inventory slots when the number keys are pressed
     }
 
     void SetInInventory()
     {
-        if (inventory[currentIndex] == null)
+        if (wp != null)
         {
-            inventory[currentIndex] = wp; // Place item in current slot
-            EquipItem(currentIndex); // Equip item (if necessary)
-        }
-        else
-        {
-            int otherSlot = (currentIndex == 0) ? 1 : 0;
-            if (inventory[otherSlot] == null)
+            Interactable interactable = wp.GetComponent<Interactable>();
+            if (interactable != null && interactable is PickableItem)
             {
-                inventory[otherSlot] = wp; // Place item in other slot
-                wp.SetActive(false); // Hide the item until equipped
+                if (inventory[currentIndex] == null)
+                {
+                    inventory[currentIndex] = wp; // Place item in the current slot
+                    EquipItem(currentIndex); // Equip the item (if necessary)
+                }
+                else
+                {
+                    int otherSlot = (currentIndex == 0) ? 1 : 0;
+                    if (inventory[otherSlot] == null)
+                    {
+                        inventory[otherSlot] = wp; // Place item in the other slot
+                        wp.SetActive(false); // Hide the item until equipped
+                    }
+                }
+
+                wp = null; // Reset wp reference
             }
         }
-
-        wp = null; // Reset wp reference
     }
 
     void Drop()
@@ -101,7 +87,7 @@ public class PickUpItemInHand : MonoBehaviour
             if (currentItem != null)
             {
                 inventory[currentIndex] = currentItem;
-                currentItem.SetActive(false); // Hide currently held item
+                currentItem.SetActive(false); // Hide the currently held item
             }
 
             currentItem = inventory[slotIndex];
@@ -135,11 +121,11 @@ public class PickUpItemInHand : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && currentIndex != 0)
         {
-            EquipItem(0); // Switch to first slot
+            EquipItem(0); // Switch to the first slot
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) && currentIndex != 1)
         {
-            EquipItem(1); // Switch to second slot
+            EquipItem(1); // Switch to the second slot
         }
     }
 }
