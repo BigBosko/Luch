@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class PickableItem : Interactable
 {
-    public virtual void Interact()
+    public override void Interact()
     {
-        base.Interact();
-        Debug.Log("Item picked up!");
+        InventoryHandler inventory = FindObjectOfType<InventoryHandler>();
 
+        if (inventory != null)
+        {
+            inventory.AddToInventory(gameObject);
+            Debug.Log("Picked up: " + gameObject.name);
+        }
+    }
+    public override void Use()
+    {
+        //koda ko je predmet uporabljen
     }
 }
