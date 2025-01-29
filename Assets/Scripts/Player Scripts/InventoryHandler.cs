@@ -8,13 +8,17 @@ public class InventoryHandler : MonoBehaviour
     public DetectionHandler detectionHandler;
     public Transform equipPos;
     private GameObject currentItem;
+    private PickableItem pickableItem;
 
     [Header("Inventory settings")]
     private int currentIndex;
-    private GameObject[] inventory = new GameObject[2];
+    public GameObject[] inventorySlots = new GameObject[2];
 
     [Header("State")]
     public bool isHolding;
+
+    [Header("Ammo")]
+    public int empAmmoCount = 0;
 
     void Update()
     {
@@ -23,7 +27,13 @@ public class InventoryHandler : MonoBehaviour
             DropItem();
         }
 
+        if(currentItem != null && Input.GetMouseButtonDown(0))
+        {
+            UseItem();
+        }
+
         HandleSlotSwitch();
+
     }
 
     public void AddToInventory(GameObject item)
@@ -39,9 +49,9 @@ public class InventoryHandler : MonoBehaviour
 
     private bool TryAddItemToSlot(int slotIndex, GameObject item)
     {
-        if (inventory[slotIndex] == null)
+        if (inventorySlots[slotIndex] == null)
         {
-            inventory[slotIndex] = item;
+            inventorySlots[slotIndex] = item;
             if (currentIndex == slotIndex)
             {
                 EquipItem(slotIndex);
@@ -63,24 +73,41 @@ public class InventoryHandler : MonoBehaviour
         {
             currentItem.transform.parent = null;
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
+
+            pickableItem = currentItem.GetComponent<PickableItem>();
+            if (pickableItem != null)
+            {
+                pickableItem.SetItemHeld(false);
+            }
+
             currentItem = null;
-            inventory[currentIndex] = null;
+            inventorySlots[currentIndex] = null;
             isHolding = false;
         }
     }
 
     private void EquipItem(int slotIndex)
     {
+        
         if (currentItem != null)
         {
             currentItem.SetActive(false);
-            inventory[currentIndex] = currentItem; // Save the item
+            inventorySlots[currentIndex] = currentItem; // Save the item
         }
 
-        currentItem = inventory[slotIndex];
+        currentItem = inventorySlots[slotIndex];
         currentIndex = slotIndex;
+        
+        //currentItem.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 0f, 0f);
+        
         currentItem.SetActive(true);
         SetInHand(currentItem);
+
+        pickableItem = currentItem.GetComponent<PickableItem>();
+        if(pickableItem != null)
+        {
+            pickableItem.SetItemHeld(true);
+        }
     }
 
     private void SetInHand(GameObject item)
@@ -102,4 +129,28 @@ public class InventoryHandler : MonoBehaviour
             EquipItem(1);
         }
     }
+
+    private void UseItem()
+    {
+        if (currentItem != null)
+        {
+            // Check if the current item is of type UsableItem
+            UsableItem usableItem = currentItem.GetComponent<UsableItem>();
+            if (usableItem != null)
+            {
+                usableItem.Use();
+            }
+            else
+            {
+                Debug.Log("This item cannot be used.");
+            }
+        }
+    }
+
+    public void AddEmpAmmo()
+    {
+        empAmmoCount += 1;
+        Debug.Log("EMP Ammo Count: " + empAmmoCount);
+    }
+
 }

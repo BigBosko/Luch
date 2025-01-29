@@ -4,18 +4,44 @@ using UnityEngine;
 
 public class PickableItem : Interactable
 {
+    private InventoryHandler inventory;
+    public Transform playerCamera;
+    public bool isHeld = false;
+
+    private void Start()
+    {
+        playerCamera = GameObject.Find("Camera Holder").transform;
+    }
+
     public override void Interact()
     {
-        InventoryHandler inventory = FindObjectOfType<InventoryHandler>();
+        inventory = FindObjectOfType<InventoryHandler>();
 
-        if (inventory != null)
-        {
-            inventory.AddToInventory(gameObject);
-            Debug.Log("Picked up: " + gameObject.name);
-        }
+        inventory.AddToInventory(gameObject);
     }
-    public override void Use()
+
+    private void Update()
     {
-        //koda ko je predmet uporabljen
+        /*if (isHeld)
+        {
+            FacePlayer();
+        }*/
     }
+
+    public void SetItemHeld(bool isHeldStatus)
+    {
+        isHeld = isHeldStatus;
+    }
+
+    /*public void FacePlayer()
+    {
+        Vector3 direction = playerCamera.position - transform.position;
+
+        direction.y = 0;
+
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, lookRotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+    }*/
 }
+
