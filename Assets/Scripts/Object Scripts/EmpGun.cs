@@ -12,16 +12,10 @@ public class EmpGun : UsableItem
 
     void Start()
     {
+        rotationType = "Forward";
         inventory = FindObjectOfType<InventoryHandler>();
     }
 
-    private void Update()
-    {
-        if (isHeld)
-        {
-            FaceForward();
-        }
-    }
 
 
     public override void Use()
@@ -45,12 +39,4 @@ public class EmpGun : UsableItem
         rb.velocity = firePoint.forward * projectileSpeed;
     }
 
-    private void FaceForward()
-    {
-        Vector3 cameraForward = Camera.main.transform.forward;
-
-        cameraForward.y = 0;
-
-        transform.rotation = Quaternion.LookRotation(cameraForward);
-    }
 }

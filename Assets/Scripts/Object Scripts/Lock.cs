@@ -9,11 +9,11 @@ public class Lock : Interactable
 
     public override void Interact()
     {
+        Debug.Log("Interacting with Lock ID: " + lockId);
         InventoryHandler inventory = FindObjectOfType<InventoryHandler>();
         if (inventory.HasRightKey(lockId))
         {
             Debug.Log("Lock unlocked!");
-            Destroy(gameObject);
         }
         else
         {

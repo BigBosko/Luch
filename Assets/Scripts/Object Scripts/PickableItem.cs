@@ -8,6 +8,8 @@ public class PickableItem : Interactable
     public Transform playerCamera;
     public bool isHeld = false;
 
+    public string rotationType;
+
     private void Start()
     {
         playerCamera = GameObject.Find("Camera Holder").transform;

@@ -39,7 +39,6 @@ public class InventoryHandler : MonoBehaviour
 
     public void AddToInventory(GameObject item)
     {
-        // Try to place the item in the current or other slot
         if (TryAddItemToSlot(currentIndex, item) || TryAddItemToSlot(GetOtherSlotIndex(), item))
         {
             return;
@@ -155,13 +154,22 @@ public class InventoryHandler : MonoBehaviour
 
     public bool HasRightKey(int lockId)
     {
-        Key key = currentItem.GetComponent<Key>();
-        if (key != null && key.keyId == lockId)
+        Debug.Log("Checking key in hand...");
+
+        if (currentItem == null)
         {
-            return true;
+            Debug.Log("No item in hand!");
+            return false;
         }
 
-        else return false;
-    }
+        Key key = currentItem.GetComponent<Key>();
+        if (key == null)
+        {
+            Debug.Log("Item is not a key!");
+            return false;
+        }
 
+        Debug.Log("Key ID: " + key.keyId + ", Lock ID: " + lockId);
+        return key.keyId == lockId;
+    }
 }
