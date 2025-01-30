@@ -12,8 +12,7 @@ public class EmpGun : UsableItem
 
     void Start()
     {
-        GameObject player = GameObject.Find("Player");
-        inventory = player.GetComponent<InventoryHandler>();
+        inventory = FindObjectOfType<InventoryHandler>();
     }
 
     private void Update()

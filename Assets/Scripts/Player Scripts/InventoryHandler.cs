@@ -5,10 +5,11 @@ using UnityEngine;
 public class InventoryHandler : MonoBehaviour
 {
     [Header("References")]
-    public DetectionHandler detectionHandler;
+    private DetectionHandler detectionHandler;
     public Transform equipPos;
-    private GameObject currentItem;
+    public GameObject currentItem;
     private PickableItem pickableItem;
+    private Key key;
 
     [Header("Inventory settings")]
     private int currentIndex;
@@ -120,11 +121,11 @@ public class InventoryHandler : MonoBehaviour
 
     private void HandleSlotSwitch()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && currentIndex != 0)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && currentIndex != 0 && inventorySlots[0] != null)
         {
             EquipItem(0);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && currentIndex != 1)
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && currentIndex != 1 && inventorySlots[1] != null)
         {
             EquipItem(1);
         }
@@ -134,7 +135,6 @@ public class InventoryHandler : MonoBehaviour
     {
         if (currentItem != null)
         {
-            // Check if the current item is of type UsableItem
             UsableItem usableItem = currentItem.GetComponent<UsableItem>();
             if (usableItem != null)
             {
@@ -151,6 +151,17 @@ public class InventoryHandler : MonoBehaviour
     {
         empAmmoCount += 1;
         Debug.Log("EMP Ammo Count: " + empAmmoCount);
+    }
+
+    public bool HasRightKey(int lockId)
+    {
+        Key key = currentItem.GetComponent<Key>();
+        if (key != null && key.keyId == lockId)
+        {
+            return true;
+        }
+
+        else return false;
     }
 
 }

@@ -6,7 +6,7 @@ public class DetectionHandler : MonoBehaviour
 {
     public Camera playerCamera;
     public LayerMask interactableLayer;
-    public float interactionRange = 3f;
+    public float interactionRange = 4f;
     private Interactable detectedInteractable;
 
     public Interactable GetDetectedInteractable()
