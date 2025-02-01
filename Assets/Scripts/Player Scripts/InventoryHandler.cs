@@ -5,11 +5,10 @@ using UnityEngine;
 public class InventoryHandler : MonoBehaviour
 {
     [Header("References")]
-    private DetectionHandler detectionHandler;
+
     public Transform equipPos;
     public GameObject currentItem;
     private PickableItem pickableItem;
-    private Key key;
 
     [Header("Inventory settings")]
     private int currentIndex;
@@ -74,6 +73,12 @@ public class InventoryHandler : MonoBehaviour
             currentItem.transform.parent = null;
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
 
+            EquipFollow followScript = currentItem.GetComponent<EquipFollow>();
+            if (followScript != null)
+            {
+                Destroy(followScript);
+            }
+
             pickableItem = currentItem.GetComponent<PickableItem>();
             if (pickableItem != null)
             {
@@ -112,11 +117,20 @@ public class InventoryHandler : MonoBehaviour
 
     private void SetInHand(GameObject item)
     {
-        item.transform.position = equipPos.position;
-        item.transform.parent = equipPos;
-        item.GetComponent<Rigidbody>().isKinematic = true;
+        currentItem = item;
+
+        EquipFollow followScript = currentItem.GetComponent<EquipFollow>();
+        if (followScript == null)
+        {
+            followScript = currentItem.AddComponent<EquipFollow>();
+        }
+        followScript.equipPos = equipPos;
+
+        currentItem.GetComponent<Rigidbody>().isKinematic = true;
+
         isHolding = true;
     }
+
 
     private void HandleSlotSwitch()
     {

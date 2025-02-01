@@ -103,8 +103,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 707042939806702085}
-  - component: {fileID: 2643982296275953563}
   - component: {fileID: 3428425624675594613}
+  - component: {fileID: 6796651670259889842}
   m_Layer: 0
   m_Name: Weak Light
   m_TagString: WeakLight
@@ -128,22 +128,6 @@ Transform:
   - {fileID: 675707924398844294}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2643982296275953563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5230100416823438253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2892b8d429f3f64d8eb56339abad2db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  lightSource: {fileID: 2562204422218657925}
 --- !u!136 &3428425624675594613
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -167,3 +151,20 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: -11, z: 0}
+--- !u!114 &6796651670259889842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5230100416823438253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8900a50e2012849be1eb6c9b05ddf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  lightSource: {fileID: 2562204422218657925}
+  enemyAi: {fileID: 0}

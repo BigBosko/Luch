@@ -42,10 +42,6 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        Detect();
-        //Debug.Log("isPlayerDetected = " +isPlayerDetected);
-        //Debug.Log("isChasing = " + isChasing);
-
         if (isPlayerDetected)
         {
             isChasing = true;
@@ -63,6 +59,7 @@ public class EnemyAI : MonoBehaviour
                 Patrol();
             }
         }
+        Detect();
     }
 
     

@@ -11,6 +11,7 @@ public class Crouch : MonoBehaviour
     private float crouchHeight;
     private float playerObjectNormalHeight = 1.8f;
     private float playerObjectCrouchHeight;
+    public Transform equipPos;
 
 
     private Vector3 normalScale; //se dinamicno nastavi v start();
@@ -62,6 +63,7 @@ public class Crouch : MonoBehaviour
         float targetHeight = IsCrouching ? crouchHeight : normalHeight;
         float targetObjectHeight = IsCrouching ? playerObjectCrouchHeight : playerObjectNormalHeight;
         transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(normalScale.x, targetHeight, normalScale.z), crouchSpeed * Time.deltaTime);
+
 
         if (Mathf.Abs(transform.localScale.y - targetHeight) < 0.01f)
         {
