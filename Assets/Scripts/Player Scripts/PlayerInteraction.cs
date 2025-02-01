@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerInteraction : MonoBehaviour
 {
     public DetectionHandler detectionHandler;
-    public InventoryHandler inventory;
 
     void Update()
     {
