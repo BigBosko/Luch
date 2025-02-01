@@ -4,26 +4,33 @@ using UnityEngine;
 
 public class Lock : Interactable
 {
+    InventoryHandler inventory;
 
     public int lockId;
     public bool isLocked = true;
 
-     
+    private void Start()
+    {
+       inventory = FindObjectOfType<InventoryHandler>();
+    }
+
     public override void Interact()
     {
         Debug.Log("Interacting with Lock ID: " + lockId);
-        InventoryHandler inventory = FindObjectOfType<InventoryHandler>();
-        if (inventory.HasRightKey(lockId))
+        if (isLocked)
         {
-            isLocked = false;
-            Transform door = transform.parent;
+            if (inventory.HasRightKey(lockId))
+            {
+                isLocked = false;
+                Transform door = transform.parent;
 
-            door.Rotate(0, -90, 0);
-            Debug.Log("Lock unlocked!");
-        }
-        else
-        {
-            Debug.Log("Wrong key or no key");
+                door.Rotate(0, -90, 0);
+                Debug.Log("Lock unlocked!");
+            }
+            else
+            {
+                Debug.Log("Wrong key or no key");
+            }
         }
     }   
 }
