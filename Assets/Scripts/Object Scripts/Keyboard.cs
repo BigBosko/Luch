@@ -5,10 +5,15 @@ using UnityEngine.UI;
 
 public class Keyboard : Interactable
 {
-    CameraSwitcher cameraSwitcher;
+    private CameraSwitcher cameraSwitcher;
 
+    void Start()
+    {
+        cameraSwitcher = GameObject.FindObjectOfType<CameraSwitcher>();
+    }
     public override void Interact()
     {
+        Debug.Log("Interacted with keyboard.");
         ToggleCamera();
     }
 
