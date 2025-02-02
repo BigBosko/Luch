@@ -21,11 +21,9 @@ public class CameraSwitcher : MonoBehaviour
     {
             currentCameraIndex = (currentCameraIndex + 1) % cameras.Length; // Loop through cameras
 
-            // Force update the material texture
             quadMaterial.SetTexture("_EmissionMap", cameras[currentCameraIndex].targetTexture);
             quadMaterial.SetTexture("_MainTex", cameras[currentCameraIndex].targetTexture);
 
-            // Enable emission if not active
             quadMaterial.EnableKeyword("_EMISSION");
 
     }

@@ -13,7 +13,6 @@ public class EmpGun : UsableItem
     void Start()
     {
         rotationType = "Forward";
-        inventory = FindObjectOfType<InventoryHandler>();
     }
 
 
