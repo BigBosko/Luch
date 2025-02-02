@@ -10,7 +10,7 @@ public class EnemyAI : MonoBehaviour
     public Transform[] waypoints;
     public NavMeshAgent agent;
     public int targetWaypoint;
-    public float waypointThreshold; //robot height *0.5 + buffer
+    public float waypointThreshold; //robot height * 0.5 + buffer
     public float patrolSpeed;
 
     [Header("Detection")]
@@ -82,7 +82,7 @@ public class EnemyAI : MonoBehaviour
 
         if (Vector3.Distance(agent.transform.position, waypoints[targetWaypoint].position) < waypointThreshold)
         {
-            Debug.Log($"Patrol: Reached waypoint {targetWaypoint}");
+            //Debug.Log($"Patrol: Reached waypoint {targetWaypoint}");
             targetWaypoint++;
             if (targetWaypoint >= waypoints.Length)
             {
