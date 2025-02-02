@@ -9,9 +9,13 @@ public class EmpGun : UsableItem
     public GameObject empProjectile;
     public float projectileSpeed;
     private InventoryHandler inventory;
-
     void Start()
     {
+        inventory = FindObjectOfType<InventoryHandler>();
+        if (inventory == null)
+        {
+            Debug.LogError("InventoryHandler not found! Ensure it exists in the scene.");
+        }
         rotationType = "Forward";
     }
 
@@ -36,6 +40,8 @@ public class EmpGun : UsableItem
         Rigidbody rb = emoProjectile.GetComponent<Rigidbody>();
 
         rb.velocity = firePoint.forward * projectileSpeed;
+
+
     }
 
 }

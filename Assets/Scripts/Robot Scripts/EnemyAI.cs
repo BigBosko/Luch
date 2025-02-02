@@ -146,5 +146,24 @@ public class EnemyAI : MonoBehaviour
         isPlayerDetected = playerDetected;
     }
 
+    public void Stun()
+    {
+        agent.isStopped = true;
+
+        agent.speed = 0;
+
+        isChasing = false;
+
+        StartCoroutine(StunDuration());
+    }
+
+    private IEnumerator StunDuration()
+    {
+        yield return new WaitForSeconds(5f);
+
+        agent.isStopped = false;
+        agent.speed = patrolSpeed;
+
+    }
 
 }

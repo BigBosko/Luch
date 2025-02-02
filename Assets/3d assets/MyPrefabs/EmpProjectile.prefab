@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4049777849138760527}
   - component: {fileID: 3647449815134044479}
   - component: {fileID: 156754003593574102}
+  - component: {fileID: 3536421965851119262}
   m_Layer: 0
   m_Name: EmpProjObj
   m_TagString: Untagged
@@ -107,6 +108,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3536421965851119262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4580769844884072622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e598f0f6171631c47b116f366d0bd731, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  detectionDistance: 0.2
 --- !u!1 &5426902157243420099
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +135,7 @@ GameObject:
   - component: {fileID: 6100060158694149219}
   - component: {fileID: -1829604791482548030}
   - component: {fileID: 852576997515219468}
+  - component: {fileID: 1749873470410600832}
   m_Layer: 0
   m_Name: EmpProjectile
   m_TagString: Untagged
@@ -191,3 +209,19 @@ CapsuleCollider:
   m_Height: 0.4
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1749873470410600832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5426902157243420099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e598f0f6171631c47b116f366d0bd731, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  detectionDistance: 0.2
