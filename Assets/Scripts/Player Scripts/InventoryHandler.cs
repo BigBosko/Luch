@@ -71,6 +71,7 @@ public class InventoryHandler : MonoBehaviour
         if (currentItem != null)
         {
             currentItem.transform.parent = null;
+            currentItem.GetComponent<Collider>().enabled = true;
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
 
             EquipFollow followScript = currentItem.GetComponent<EquipFollow>();
@@ -127,6 +128,8 @@ public class InventoryHandler : MonoBehaviour
         followScript.equipPos = equipPos;
 
         currentItem.GetComponent<Rigidbody>().isKinematic = true;
+
+        currentItem.GetComponent<Collider>().enabled = false;
 
         isHolding = true;
     }
