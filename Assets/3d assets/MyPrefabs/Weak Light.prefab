@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 707042939806702085}
   - component: {fileID: 3428425624675594613}
-  - component: {fileID: 6796651670259889842}
+  - component: {fileID: 3673783654719405366}
   m_Layer: 0
   m_Name: Weak Light
   m_TagString: WeakLight
@@ -151,7 +151,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: -11, z: 0}
---- !u!114 &6796651670259889842
+--- !u!114 &3673783654719405366
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5230100416823438253}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a8900a50e2012849be1eb6c9b05ddf9, type: 3}
+  m_Script: {fileID: 11500000, guid: 90d6a93450567a4478ae81364ab2dbda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerLayer:
