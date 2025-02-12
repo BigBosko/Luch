@@ -11,6 +11,9 @@ public class EnemyAI : MonoBehaviour
     public LayerMask playerLayer;  // Only detect player layer
     public Light spotLight;
     public bool isPlayerDetected;
+    private float currentLightDistance;
+    private float currentLightAngle;
+    private float currentLightIntensity;
 
     [Header("Patrol")]
     public Transform[] waypoints;
@@ -20,6 +23,7 @@ public class EnemyAI : MonoBehaviour
     public float patrolSpeed;
     public float patrolLightDistance;
     public float patrolLightAngle;
+    public float patrolLightIntensity;
 
     [Header("Chase")]
     public Transform player;
@@ -29,12 +33,14 @@ public class EnemyAI : MonoBehaviour
     public float chaseSpeed;
     public float chaseLightDistance;
     public float chaseLightAngle;
+    public float ChaseLightIntensity;
 
     [Header("Scout")]
-    public float scoutDuration = 8f;
+    public float scoutDuration;
     public bool isScouting;
     public float scoutLightDistance;
     public float scoutLightAngle;
+    public float scoutLightIntensity;
 
 
     void Start()
@@ -65,13 +71,18 @@ public class EnemyAI : MonoBehaviour
         Detect();
     }
 
+    void UpdateLight(float newRange, float newAngle, float newIntensity, float transitionTime = 0.5f)
+    {
+        StopAllCoroutines();
+        StartCoroutine(LerpLight(newRange, newAngle, newIntensity, transitionTime));
+    }
+
+
 
     void Chase()
     {
         agent.speed = chaseSpeed;
-        spotLight.range = chaseLightDistance;
-        spotLight.spotAngle = chaseLightAngle;
-
+        UpdateLight(chaseLightDistance, chaseLightAngle, ChaseLightIntensity, 1f);
         agent.destination = lastPosition;
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
@@ -82,7 +93,6 @@ public class EnemyAI : MonoBehaviour
                 Scout();
             }
         }
-
     }
 
 
@@ -90,87 +100,55 @@ public class EnemyAI : MonoBehaviour
     {
         agent.speed = patrolSpeed;
         agent.destination = waypoints[targetWaypoint].position;
-        spotLight.range = patrolLightDistance;
-        spotLight.spotAngle = patrolLightAngle;
+        UpdateLight(patrolLightDistance, patrolLightAngle, patrolLightIntensity, 1f); // Lerp transition
 
-        if (Vector3.Distance(agent.transform.position, waypoints[targetWaypoint].position) < waypointThreshold)
+        if (agent.remainingDistance < waypointThreshold)
         {
-            //Debug.Log($"Patrol: Reached waypoint {targetWaypoint}");
-            targetWaypoint++;
-            if (targetWaypoint >= waypoints.Length)
-            {
-                targetWaypoint = 0; // Loop back to the first waypoint
-            }
+            targetWaypoint = (targetWaypoint + 1) % waypoints.Length;
         }
     }
 
+    public void Scout()
+    {
+
+        if (!isScouting)
+        {
+            isScouting = true;
+            UpdateLight(scoutLightDistance, scoutLightAngle, scoutLightIntensity, 1f);
+            StartCoroutine(RotateWhileScouting());
+        }
+    }
 
     void Detect()
     {
-        float detectionDistance;
-        float detectionAngle;
-        if (isChasing)
-        {
-            detectionDistance = chaseLightDistance;
-            detectionAngle = chaseLightAngle;
-        }
-        else
-        {
-            detectionDistance = patrolLightDistance;
-            detectionAngle = patrolLightAngle;
-        }
+        // Set current detection range and angle based on state
+        currentLightDistance = isChasing ? chaseLightDistance : patrolLightDistance;
+        currentLightAngle = isChasing ? chaseLightAngle : patrolLightAngle;
 
-        Transform lightOrigin = spotLight.gameObject.transform;
-        Collider[] detectedColliders = Physics.OverlapSphere(lightOrigin.position, detectionDistance, playerLayer);
+        Transform lightOrigin = spotLight.transform;
+        isPlayerDetected = false; // Reset detection state
 
-        bool playerDetected = false; // Temporarily store the detection result
+        Collider[] detectedColliders = Physics.OverlapSphere(lightOrigin.position, currentLightDistance, playerLayer);
 
         foreach (var collider in detectedColliders)
         {
             Vector3 directionToPlayer = (collider.transform.position - lightOrigin.position).normalized;
-
-            //Debug.Log($"Checking object: {collider.gameObject.name}");
-
-            // Check if the player is within the cone's angle
             float angleToPlayer = Vector3.Angle(lightOrigin.forward, directionToPlayer);
-            if (angleToPlayer < detectionAngle / 2)
+
+            if (angleToPlayer < currentLightAngle / 2) // Ensure it's inside the light cone
             {
-                //Debug.Log($"Object {collider.gameObject.name} is within cone angle.");
-
-                // Perform a raycast to see if the path to the player is clear
-                RaycastHit hit;
-                if (Physics.Raycast(lightOrigin.position, directionToPlayer, out hit, detectionDistance))
+                if (Physics.Raycast(lightOrigin.position, directionToPlayer, out RaycastHit hit, currentLightDistance))
                 {
-                    //Debug.DrawRay(lightOrigin.position, directionToPlayer * detectionDistance, Color.red);
-
-                    //Debug.Log($"Raycast hit: {hit.collider.gameObject.name}");
-
-                    // Ensure the raycast hits the player object
                     if (hit.collider.gameObject == collider.gameObject)
                     {
-                        //Debug.Log("Player detected!");
-                        playerDetected = true;
-                        break; // Exit loop if player is detected
-                    }
-                    else
-                    {
-                        //Debug.Log($"Raycast hit {hit.collider.gameObject.name} instead of player.");
+                        isPlayerDetected = true;
+                        break;
                     }
                 }
-                else
-                {
-                    //Debug.Log("Raycast didn't hit anything.");
-                }
-            }
-            else
-            {
-                //Debug.Log($"Object {collider.gameObject.name} is outside the cone angle.");
             }
         }
-
-        // Update the detection state
-        isPlayerDetected = playerDetected;
     }
+
 
     public void Stun()
     {
@@ -188,19 +166,8 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitForSeconds(5f);
 
         agent.isStopped = false;
-        agent.speed = patrolSpeed;
     }
 
-    public void Scout()
-    {
-        isScouting = true;
-        spotLight.range = scoutLightDistance;
-        spotLight.spotAngle = scoutLightAngle;
-        if (!isScouting)
-        {
-            StartCoroutine(RotateWhileScouting());
-        }
-    }
 
     private IEnumerator RotateWhileScouting()
     {
@@ -217,7 +184,33 @@ public class EnemyAI : MonoBehaviour
         }
 
         transform.rotation = targetRotation; // Ensure exact final rotation
+        
         isScouting = false;
+    }
+
+    IEnumerator LerpLight(float targetRange, float targetAngle, float targetIntensity, float duration)
+    {
+        float startRange = spotLight.range;
+        float startAngle = spotLight.spotAngle;
+        float startIntensity = spotLight.intensity;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration; // Normalized time (0 to 1)
+
+            // Lerp between start and target values
+            spotLight.range = Mathf.Lerp(startRange, targetRange, t);
+            spotLight.spotAngle = Mathf.Lerp(startAngle, targetAngle, t);
+            spotLight.intensity = Mathf.Lerp(startIntensity, targetIntensity, t);
+
+            yield return null;
+        }
+
+        spotLight.range = targetRange;
+        spotLight.spotAngle = targetAngle;
+        spotLight.intensity = targetIntensity;
     }
 
 }
