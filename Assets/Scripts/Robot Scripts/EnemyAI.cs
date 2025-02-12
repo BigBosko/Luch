@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Experimental.GlobalIllumination;
 
 
 public class EnemyAI : MonoBehaviour
 {
+    [Header("Detection")]
+    public LayerMask playerLayer;  // Only detect player layer
+    public Light spotLight;
+    public bool isPlayerDetected;
+
     [Header("Patrol")]
     public Transform[] waypoints;
     public NavMeshAgent agent;
     public int targetWaypoint;
     public float waypointThreshold; //robot height * 0.5 + buffer
     public float patrolSpeed;
-
-    [Header("Detection")]
-    public float detectionDistance;  // Distance the cone can detect
-    public float coneAngle;  // Angle of the cone (degrees)
-    public LayerMask playerLayer;  // Only detect player layer
-    public Transform lightOrigin;  // The origin of the light (usually at the front of the robot)
-    public bool isPlayerDetected;
-
+    public float patrolLightDistance;
+    public float patrolLightAngle;
 
     [Header("Chase")]
     public Transform player;
@@ -27,11 +27,14 @@ public class EnemyAI : MonoBehaviour
     public bool isChasing;
     public float lastPositionTreshold;
     public float chaseSpeed;
+    public float chaseLightDistance;
+    public float chaseLightAngle;
 
-    /*[Header("Scouting")]
+    [Header("Scout")]
     public float scoutDuration = 5f;
-    public float scoutRotationSpeed = 30f;
-    public bool isScouting;*/
+    public bool isScouting;
+    public float scoutLightDistance;
+    public float scoutLightAngle;
 
 
     void Start()
@@ -64,8 +67,10 @@ public class EnemyAI : MonoBehaviour
 
     
     void Chase()
-    {
+    { 
         agent.speed = chaseSpeed;
+        spotLight.range = chaseLightDistance;
+        spotLight.spotAngle = chaseLightAngle;
         if (Vector3.Distance(agent.transform.position, lastPosition) <= lastPositionTreshold)
         {
             isChasing = false;
@@ -79,6 +84,8 @@ public class EnemyAI : MonoBehaviour
     {
         agent.speed = patrolSpeed;
         agent.destination = waypoints[targetWaypoint].position;
+        spotLight.range = patrolLightDistance;
+        spotLight.spotAngle = patrolLightAngle;
 
         if (Vector3.Distance(agent.transform.position, waypoints[targetWaypoint].position) < waypointThreshold)
         {
@@ -94,7 +101,20 @@ public class EnemyAI : MonoBehaviour
 
     void Detect()
     {
-        // Find all colliders within a sphere around the light origin
+        float detectionDistance;
+        float detectionAngle;
+        if (isChasing)
+        {
+            detectionDistance = chaseLightDistance;
+            detectionAngle = chaseLightAngle;
+        }
+        else
+        {
+            detectionDistance = patrolLightDistance;
+            detectionAngle = patrolLightAngle;
+        }
+
+        Transform lightOrigin = spotLight.gameObject.transform;
         Collider[] detectedColliders = Physics.OverlapSphere(lightOrigin.position, detectionDistance, playerLayer);
 
         bool playerDetected = false; // Temporarily store the detection result
@@ -107,7 +127,7 @@ public class EnemyAI : MonoBehaviour
 
             // Check if the player is within the cone's angle
             float angleToPlayer = Vector3.Angle(lightOrigin.forward, directionToPlayer);
-            if (angleToPlayer < coneAngle / 2)
+            if (angleToPlayer < detectionAngle / 2)
             {
                 //Debug.Log($"Object {collider.gameObject.name} is within cone angle.");
 
