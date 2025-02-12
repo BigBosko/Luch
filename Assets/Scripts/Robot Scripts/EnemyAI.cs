@@ -31,7 +31,7 @@ public class EnemyAI : MonoBehaviour
     public float chaseLightAngle;
 
     [Header("Scout")]
-    public float scoutDuration = 5f;
+    public float scoutDuration = 8f;
     public bool isScouting;
     public float scoutLightDistance;
     public float scoutLightAngle;
@@ -65,18 +65,24 @@ public class EnemyAI : MonoBehaviour
         Detect();
     }
 
-    
+
     void Chase()
-    { 
+    {
         agent.speed = chaseSpeed;
         spotLight.range = chaseLightDistance;
         spotLight.spotAngle = chaseLightAngle;
-        if (Vector3.Distance(agent.transform.position, lastPosition) <= lastPositionTreshold)
-        {
-            isChasing = false;
-        }
 
         agent.destination = lastPosition;
+
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            if (!isPlayerDetected)
+            {
+                isChasing = false;
+                Scout();
+            }
+        }
+
     }
 
 
@@ -183,7 +189,35 @@ public class EnemyAI : MonoBehaviour
 
         agent.isStopped = false;
         agent.speed = patrolSpeed;
+    }
 
+    public void Scout()
+    {
+        isScouting = true;
+        spotLight.range = scoutLightDistance;
+        spotLight.spotAngle = scoutLightAngle;
+        if (!isScouting)
+        {
+            StartCoroutine(RotateWhileScouting());
+        }
+    }
+
+    private IEnumerator RotateWhileScouting()
+    {
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = startRotation * Quaternion.Euler(0, 360, 0); // Rotate around Y-axis
+        float elapsedTime = 0f;
+
+        while (elapsedTime < scoutDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / scoutDuration; // Normalize progress
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, progress);
+            yield return null;
+        }
+
+        transform.rotation = targetRotation; // Ensure exact final rotation
+        isScouting = false;
     }
 
 }
