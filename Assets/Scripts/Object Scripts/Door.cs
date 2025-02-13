@@ -1,43 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Door : Interactable
 {
     private Lock lockComp;
-
-    private bool isOpen = false;
+    
+    [SerializeField ]private bool isOpen;
     private float interactRotation = 90f;
 
     private void Start()
     {
         lockComp = GetComponentInChildren<Lock>();
-
-        if(lockComp == null)
+        if (transform.localRotation == quaternion.identity)
         {
-            Debug.LogError("No Lock component found on " + gameObject.name);
+            isOpen = false;
         }
+        else isOpen = true;
+
     }
 
     public override void Interact()
     {
-        if (lockComp.isLocked == true)
+        if (lockComp == null)
         {
-            Debug.Log("The door is locked.");
+            Debug.Log("Door has nos lock");
+            ToggleDoor();
         }
         else
         {
-            if (isOpen)
+            if (lockComp.isLockLocked())
             {
-                transform.Rotate(0, -interactRotation, 0);
-                isOpen = false;
+                Debug.Log("Door is locked");
             }
             else
             {
-                transform.Rotate(0, interactRotation, 0);
-                isOpen = true;
-
+                ToggleDoor();
             }
+        }
+    }
+
+    public void ToggleDoor()
+    {
+        if (isOpen)
+        {
+            transform.localRotation = quaternion.identity;
+            isOpen = false;
+        }
+        else
+        {
+            transform.Rotate(0, -interactRotation, 0);
+            isOpen = true;
         }
     }
 }

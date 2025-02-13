@@ -7,11 +7,14 @@ public class Lock : Interactable
     InventoryHandler inventory;
 
     public int lockId;
-    public bool isLocked = true;
+    private bool isLocked;
+    private Door door;
 
     private void Start()
     {
        inventory = FindObjectOfType<InventoryHandler>();
+       door =  GetComponentInParent<Door>();
+       isLocked = true;
     }
 
     public override void Interact()
@@ -22,15 +25,17 @@ public class Lock : Interactable
             if (inventory.HasRightKey(lockId))
             {
                 isLocked = false;
-                Transform door = transform.parent;
 
-                door.Rotate(0, -90, 0);
-                Debug.Log("Lock unlocked!");
             }
             else
             {
                 Debug.Log("Wrong key or no key");
             }
         }
-    }   
+    }
+
+    public bool isLockLocked()
+    {
+        return isLocked;
+    }
 }
