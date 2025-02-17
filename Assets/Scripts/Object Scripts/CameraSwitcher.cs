@@ -1,32 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    public Material quadMaterial;
-    public Camera[] cameras;
+    public Camera[] cameras;  // Array of cameras
+    public RenderTexture renderTexture; // Single Render Texture
     private int currentCameraIndex = 0;
-
+    private Material quadMaterial;  // Material from the Quad
 
     private void Start()
     {
+        // Get the Quad's material from its MeshRenderer
+        quadMaterial = GetComponent<Renderer>().material;
+
         if (cameras.Length > 0)
         {
-            quadMaterial.mainTexture = cameras[currentCameraIndex].targetTexture;
+            // Assign the same RenderTexture to all cameras
+            foreach (Camera cam in cameras)
+            {
+                cam.targetTexture = renderTexture;
+                cam.enabled = false;  // Disable all cameras initially
+            }
+
+            // Enable the first camera
+            cameras[currentCameraIndex].enabled = true;
+
+            // Assign the RenderTexture to the material
+            quadMaterial.mainTexture = renderTexture;
         }
     }
 
     public void SwitchCamera()
     {
-            currentCameraIndex = (currentCameraIndex + 1) % cameras.Length; // Loop through cameras
+        // Disable current camera
+        cameras[currentCameraIndex].enabled = false;
 
-            quadMaterial.SetTexture("_EmissionMap", cameras[currentCameraIndex].targetTexture);
-            quadMaterial.SetTexture("_MainTex", cameras[currentCameraIndex].targetTexture);
+        // Switch to the next camera
+        currentCameraIndex = (currentCameraIndex + 1) % cameras.Length;
 
-            quadMaterial.EnableKeyword("_EMISSION");
-
+        // Enable the new active camera
+        cameras[currentCameraIndex].enabled = true;
     }
-
-
 }
