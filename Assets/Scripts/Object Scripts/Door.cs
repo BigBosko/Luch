@@ -6,26 +6,25 @@ using UnityEngine;
 public class Door : Interactable
 {
     private Lock lockComp;
-    
-    [SerializeField ]private bool isOpen;
-    private float interactRotation = 90f;
+
+    [SerializeField] private bool isInitiallyOpen = false;
+    [SerializeField] private Vector3 openRotation = new Vector3(0, 90, 0);
+    [SerializeField] private Vector3 closedRotation = Vector3.zero;
+    private bool isOpen;
 
     private void Start()
     {
         lockComp = GetComponentInChildren<Lock>();
-        if (transform.localRotation == quaternion.identity)
-        {
-            isOpen = false;
-        }
-        else isOpen = true;
 
+        isOpen = isInitiallyOpen;
+        transform.localRotation = Quaternion.Euler(isOpen ? openRotation : closedRotation);
     }
 
     public override void Interact()
     {
         if (lockComp == null)
         {
-            Debug.Log("Door has nos lock");
+            Debug.Log("Door has no lock");
             ToggleDoor();
         }
         else
@@ -43,15 +42,7 @@ public class Door : Interactable
 
     public void ToggleDoor()
     {
-        if (isOpen)
-        {
-            transform.localRotation = quaternion.identity;
-            isOpen = false;
-        }
-        else
-        {
-            transform.Rotate(0, -interactRotation, 0);
-            isOpen = true;
-        }
+        isOpen = !isOpen;
+        transform.localRotation = Quaternion.Euler(isOpen ? openRotation : closedRotation);
     }
 }

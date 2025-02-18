@@ -33,7 +33,7 @@ public class StrongLight : MonoBehaviour
     {
         LightInterval();
         DetectPlayer();
-        Debug.Log("IsPlayerInZone= " + isPlayerInZone + " | Light is " + (isLightOn ? "ON" : "OFF"));
+        //Debug.Log("IsPlayerInZone= " + isPlayerInZone + " | Light is " + (isLightOn ? "ON" : "OFF"));
     }
 
     void OnTriggerEnter(Collider triggerObject)
@@ -43,10 +43,10 @@ public class StrongLight : MonoBehaviour
             Debug.Log("Player detected in the detection zone!");
             isPlayerInZone = true;
         }
-        else
+        /*else
         {
             Debug.Log("Non-player object detected.");
-        }
+        }*/
     }
 
     private void OnTriggerExit(Collider triggerObject)
@@ -55,14 +55,13 @@ public class StrongLight : MonoBehaviour
 
         if (((1 << triggerObject.gameObject.layer) & playerLayer) != 0)
         {
-            // When the player exits the detection zone
-            Debug.Log("Player left the detection zone.");
+            //Debug.Log("Player left the detection zone.");
             isPlayerInZone = false;
         }
-        else
+        /*else
         {
             Debug.Log("Non-player object left the detection zone.");
-        }
+        }*/
     }
 
     private void DetectPlayer()
@@ -82,7 +81,7 @@ public class StrongLight : MonoBehaviour
             if (!isLightOn)
             {
                 SetLightState(true);
-                Debug.Log("Light turned ON.");
+                //Debug.Log("Light turned ON.");
             }
         }
         else
@@ -90,7 +89,7 @@ public class StrongLight : MonoBehaviour
             if (isLightOn)
             {
                 SetLightState(false);
-                Debug.Log("Light turned OFF.");
+                //Debug.Log("Light turned OFF.");
             }
         }
     }
@@ -104,7 +103,7 @@ public class StrongLight : MonoBehaviour
             lightSource.enabled = state;
         }
 
-        Debug.Log(state ? "Light turned on" : "Light turned off");
+        //Debug.Log(state ? "Light turned on" : "Light turned off");
     }
 
     private void KillPlayer()
