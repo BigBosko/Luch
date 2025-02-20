@@ -9,7 +9,6 @@ public class EmpGun : UsableItem
     public Transform firePoint;
     public GameObject empProjectile;
     public float projectileSpeed;
-    private InventoryHandler inventory;
     void Start()
     {
         inventory = FindObjectOfType<InventoryHandler>();

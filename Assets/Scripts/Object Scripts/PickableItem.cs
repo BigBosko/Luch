@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickableItem : Interactable
 {
-    public InventoryHandler inventory;
+    protected InventoryHandler inventory;
     public Transform playerCamera;
     public bool isHeld = false;
 
@@ -13,11 +13,11 @@ public class PickableItem : Interactable
     private void Start()
     {
         playerCamera = GameObject.Find("Camera Holder").transform;
+        inventory = FindObjectOfType<InventoryHandler>();
     }
 
     public override void Interact()
     {
-        inventory = FindObjectOfType<InventoryHandler>();
         inventory.AddToInventory(gameObject);
     }
 
