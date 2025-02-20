@@ -32,15 +32,30 @@ public class KnobSwitch : Interactable
 
     public override void Interact()
     {
+        ToggleSwitch();
+    }
+
+    private void ToggleSwitch()
+    {
+        isOn = !isOn;
+        MoveKnob();
+        Action();
+    }
+
+    private void MoveKnob()
+    {
         if (isOn)
         {
             knobPos.localPosition = new Vector3(offXPos, knobPos.localPosition.y, knobPos.localPosition.z);
-            isOn = false;
         }
         else
         {
             knobPos.localPosition = new Vector3(onXPos, knobPos.localPosition.y, knobPos.localPosition.z);
-            isOn = true;
         }
+    }
+
+    private void Action()
+    {
+
     }
 }

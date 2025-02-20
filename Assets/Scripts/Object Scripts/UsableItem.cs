@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class UsableItem : PickableItem
 {
-    public abstract override void Use();
+    public abstract void Use();
 }

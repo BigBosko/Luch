@@ -8,11 +8,6 @@ public class Interactable : MonoBehaviour
     {
         Debug.Log("Interacted with " + gameObject.name);
     }
-
-    public virtual void Use()
-    {
-        Debug.Log("This item cannot be used directly.");
-    }
-
+    
 }
 
