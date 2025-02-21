@@ -4,25 +4,17 @@ using UnityEngine;
 public class PuzzleManager : MonoBehaviour
 {
     public static PuzzleManager Instance;
-    public List<LightController> allLights;
+    public Light[] allLights;
     public bool puzzleSolved = false;
-
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-    }
-
-    public void CheckPuzzleState()
+    
+    
+    public bool IsSolved()
     {
         foreach (var light in allLights)
         {
-            if (light.isOn)
-            {
-                return; // At least one light is still on, puzzle not solved
-            }
+            if (light.GetComponent<StaticLight>())
+                return false;
         }
-
-        puzzleSolved = true;
-        Debug.Log("Puzzle Solved!");
+        return true;
     }
 }

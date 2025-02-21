@@ -11,6 +11,7 @@ public class KnobSwitch : Interactable
     private float offXPos = 0.07f;
     [SerializeField] private bool isInitialyOn;
     private bool isOn;
+    [SerializeField] private GameObject[] controlledLights;
 
     void Start()
     {
@@ -56,6 +57,15 @@ public class KnobSwitch : Interactable
 
     private void Action()
     {
-
+        foreach (var light in controlledLights)
+        {
+            if (light != null)
+            {
+                if(light.GetComponent<StaticLight>() != null)
+                {
+                    light.GetComponent<StaticLight>().TogglleLightState();
+                }
+            }
+        }
     }
 }

@@ -52,7 +52,13 @@ public class StaticLight : MonoBehaviour
         SetLightState(true);
     }
 
-    protected void SetLightState(bool state)
+    public void TogglleLightState()
+    {
+        isLightOn = !isLightOn;
+        lightSource.enabled = isLightOn;
+    }
+
+    public void SetLightState(bool state)
     {
         isLightOn = state;
         if (lightSource != null)
