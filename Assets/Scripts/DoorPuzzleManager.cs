@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PuzzleManager : MonoBehaviour
+public class DoorPuzzleManager : MonoBehaviour
 {
-    public static PuzzleManager Instance;
-    public Light[] allLights;
+    public static DoorPuzzleManager Instance;
+    public GameObject[] allDoors;
     public bool puzzleSolved = false;
     
     
     public bool IsSolved()
     {
-        foreach (var light in allLights)
+        foreach (var door in allDoors)
         {
-            if (light.GetComponent<StaticLight>())
+            if (true)
                 return false;
         }
         return true;
