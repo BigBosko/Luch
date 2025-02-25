@@ -11,7 +11,7 @@ public class KnobSwitch : Interactable
     private float offXPos = 0.07f;
     [SerializeField] private bool isInitialyOn;
     private bool isOn;
-    [SerializeField] private GameObject[] controlledLights;
+    [SerializeField] private GameObject[] controlledDoors;
 
     void Start()
     {
@@ -27,8 +27,6 @@ public class KnobSwitch : Interactable
             knobPos.localPosition = new Vector3(offXPos, knobPos.localPosition.y, knobPos.localPosition.z);
             isOn = false;
         }
-
-
     }
 
     public override void Interact()
@@ -55,17 +53,16 @@ public class KnobSwitch : Interactable
         }
     }
 
+    private void ToggleDoor(GameObject door)
+    {
+        door.SetActive(!door.activeSelf);  // Toggle the active state of the door
+    }
+
     private void Action()
     {
-        foreach (var light in controlledLights)
+        foreach (var door in controlledDoors)
         {
-            if (light != null)
-            {
-                if(light.GetComponent<StaticLight>() != null)
-                {
-                    light.GetComponent<StaticLight>().TogglleLightState();
-                }
-            }
+            ToggleDoor(door);  // Toggle each door in the array
         }
     }
 }
