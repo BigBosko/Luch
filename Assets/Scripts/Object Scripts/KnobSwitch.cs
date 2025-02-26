@@ -43,7 +43,7 @@ public class KnobSwitch : Interactable
 
     private void MoveKnob()
     {
-        if (isOn)
+        if (!isOn)
         {
             knobPos.localPosition = new Vector3(offXPos, knobPos.localPosition.y, knobPos.localPosition.z);
         }
