@@ -8,7 +8,7 @@ public class Key : PickableItem
 
     private void Start()
     {
-        rotationType = "Face";
+        rotationType = "Forward";
     }
 
     private void Update()

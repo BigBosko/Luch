@@ -37,7 +37,7 @@ namespace NavKeypad
         [SerializeField] private Renderer panelMesh;
         [SerializeField] private TMP_Text keypadDisplayText;
         [SerializeField] private AudioSource audioSource;
-        public GameObject door;
+        [SerializeField] private GameObject door;
 
 
         private string currentInput;
@@ -126,7 +126,7 @@ namespace NavKeypad
             onAccessGranted?.Invoke();
             panelMesh.material.SetVector("_EmissionColor", screenGrantedColor * screenIntensity);
             audioSource.PlayOneShot(accessGrantedSfx);
-            Destroy(door);
+            door.GetComponent<MechanicalDoor>().StartOpen();
         }
 
     }
