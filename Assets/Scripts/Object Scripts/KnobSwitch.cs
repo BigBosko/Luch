@@ -12,9 +12,14 @@ public class KnobSwitch : Interactable
     [SerializeField] private bool isInitialyOn;
     private bool isOn;
     [SerializeField] private GameObject[] controlledDoors;
+    private Vector3 startPos;
+    private Vector3 upPos;
 
     void Start()
     {
+        startPos = transform.position;
+        upPos = new Vector3(startPos.x, startPos.y + 2f, startPos.z);
+        
         knobPos = transform.GetChild(0);
 
         if (isInitialyOn)
@@ -53,16 +58,12 @@ public class KnobSwitch : Interactable
         }
     }
 
-    private void ToggleDoor(GameObject door)
-    {
-        door.SetActive(!door.activeSelf);  // Toggle the active state of the door
-    }
 
     private void Action()
     {
         foreach (var door in controlledDoors)
         {
-            ToggleDoor(door);  // Toggle each door in the array
+            door.GetComponent<MechanicalDoor>().ToggleDoor();
         }
     }
 }

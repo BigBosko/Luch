@@ -1,35 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MechanicalDoor : MonoBehaviour
 {
-    [SerializeField] private float moveDuration;
-    private Vector3 startPos;
-    private Vector3 targetPos;
+    private float moveDuration;
+    private Vector3 closePos;
+    private Vector3 openPos;
+    private bool isOpen;
 
-    public void Open()
+    private void Start()
     {
-        startPos = transform.position;
-        float height = GetComponent<Renderer>().bounds.size.y;
-        targetPos = startPos + new Vector3(0, height * 0.9f, 0);
+        closePos = transform.position;
+        openPos = new Vector3(closePos.x, closePos.y + 6f, closePos.z);
+        isOpen = false;
     }
 
-    public void StartOpen()
+    public void ToggleDoor()
     {
-        StartCoroutine(LerpPosition());
-    }
-
-    private IEnumerator LerpPosition()
-    {
-        float elapsedTime = 0;
-        while (elapsedTime < moveDuration)
+        if (isOpen)
         {
-            transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / moveDuration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            isOpen = false;
+            transform.position = closePos;
         }
-        transform.position = targetPos;
+        else
+        {
+            isOpen = true;
+            transform.position = openPos;
+        }
     }
 
 }
