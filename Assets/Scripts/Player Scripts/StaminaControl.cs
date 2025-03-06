@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StaminaControll : MonoBehaviour
 {
@@ -10,7 +11,11 @@ public class StaminaControll : MonoBehaviour
     [SerializeField] private float staminaRegen = 0.7f;
     [SerializeField] private float regenDelay = 3f;
 
+    [Header("References")]
+    [SerializeField] private Image staminaBar;
+
     [SerializeField] private float currentStamina;
+
     public bool CanSprint => currentStamina > 0 && !isStaminaExhausted;
     public float CurrentStamina => currentStamina;
 
@@ -20,6 +25,7 @@ public class StaminaControll : MonoBehaviour
     private void Start()
     {
         currentStamina = maxStamina;
+        staminaBar.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -38,6 +44,8 @@ public class StaminaControll : MonoBehaviour
                 isStaminaExhausted = false;
             }
         }
+
+        StaminaUI();
     }
 
     private void DrainStamina()
@@ -61,4 +69,26 @@ public class StaminaControll : MonoBehaviour
     {
         currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegen * Time.deltaTime);
     }
+
+    private void StaminaUI()
+    {
+        staminaBar.fillAmount = currentStamina / maxStamina;
+
+        if (currentStamina == maxStamina)
+        {
+            StopAllCoroutines(); 
+            StartCoroutine(HideStaminaBarAfterDelay(2f));
+        }
+        else
+        {
+            staminaBar.gameObject.SetActive(true);
+        }
+    }
+
+    private IEnumerator HideStaminaBarAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        staminaBar.gameObject.SetActive(false);
+    }
+
 }
