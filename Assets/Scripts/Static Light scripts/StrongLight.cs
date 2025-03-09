@@ -9,7 +9,7 @@ public class StrongLight : StaticLight
         base.Start();
     }
       
-    protected override void Update()
+    protected void Update()
     {
         DetectPlayer();
         //Debug.Log("IsPlayerInZone= " + isPlayerInZone + " | Light is " + (isLightOn ? "ON" : "OFF"));

@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class WeakLight : StaticLight
 {
-
+    [Header("References")]
     private EnemyAI enemyAi;
+
     protected override void Start()
     {
         base.Start();
         enemyAi = FindAnyObjectByType<EnemyAI>();
+
     }
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         DetectPlayer();
     }
 
@@ -31,5 +32,6 @@ public class WeakLight : StaticLight
         enemyAi.isPlayerDetected = true;
         enemyAi.lastPosition = detectionCollider.transform.position;
     }
+
 
 }
