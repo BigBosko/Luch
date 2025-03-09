@@ -6,8 +6,9 @@ public class Key : PickableItem
 {
     public int keyId;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         rotationType = "Forward";
     }
 

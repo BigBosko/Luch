@@ -10,11 +10,11 @@ public class PickableItem : Interactable
 
     public string rotationType;
 
-    private void Start()
-    {
+     protected virtual void Start()
+     {
         playerCamera = GameObject.Find("Camera Holder").transform;
         inventory = FindObjectOfType<InventoryHandler>();
-    }
+     }
 
     public override void Interact()
     {
