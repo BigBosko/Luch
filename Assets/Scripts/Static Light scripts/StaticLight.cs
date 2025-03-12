@@ -95,17 +95,17 @@ public class StaticLight : MonoBehaviour
         {
             Debug.Log("Starting flicker cycle");
             // Ensure the light is on at the start of the cycle.
-            SetLightState(true);
+            SetLightState(false);
 
             // Flicker off and on for the specified number of times.
             for (int i = 0; i < flickerTimes; i++)
             {
                 Debug.Log("Flicker " + i + ": Turning off");
-                SetLightState(false);
+                SetLightState(true);
                 yield return new WaitForSeconds(flickerInterval);
 
                 Debug.Log("Flicker " + i + ": Turning on");
-                SetLightState(true);
+                SetLightState(false);
                 yield return new WaitForSeconds(flickerInterval);
             }
 
