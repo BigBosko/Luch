@@ -5,7 +5,7 @@ using UnityEngine;
 public class InventoryHandler : MonoBehaviour
 {
     [Header("References")]
-        public Transform equipPos;
+    public Transform equipPos;
     public GameObject currentItem;
     private PickableItem pickableItem;
 
