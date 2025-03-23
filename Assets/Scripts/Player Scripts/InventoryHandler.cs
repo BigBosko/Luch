@@ -5,8 +5,7 @@ using UnityEngine;
 public class InventoryHandler : MonoBehaviour
 {
     [Header("References")]
-
-    public Transform equipPos;
+        public Transform equipPos;
     public GameObject currentItem;
     private PickableItem pickableItem;
 
@@ -17,8 +16,9 @@ public class InventoryHandler : MonoBehaviour
     [Header("State")]
     public bool isHolding;
 
-    [Header("Ammo")]
+    [Header("Non-physical inventory")]
     public int empAmmoCount = 0;
+    public bool hasGoggles = false;
 
     void Update()
     {
