@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class EnemyKillPlayer : MonoBehaviour
 {
-    public LayerMask playerLayer;
+    [Header("References")]
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private Canvas deathScreen;
+
+    private void Start()
+    {
+        deathScreen.enabled = false;
+    }
 
     private void OnTriggerEnter(Collider triggerObject)
     {
@@ -16,6 +23,14 @@ public class EnemyKillPlayer : MonoBehaviour
 
     private void KillPlayer()
     {
-        Debug.Log("Player killed!");
+        Debug.Log("Player Killed");
+        ShowDeathScreen();
+    }
+    private void ShowDeathScreen()
+    {
+        deathScreen.enabled = true;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

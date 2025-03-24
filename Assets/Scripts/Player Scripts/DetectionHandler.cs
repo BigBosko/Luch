@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class DetectionHandler : MonoBehaviour
 {
-    public Camera playerCamera;
-    public LayerMask interactableLayer;
+    [Header("References")]
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private float interactionRange;
+
     private Interactable detectedInteractable;
 
     public Interactable GetDetectedInteractable()

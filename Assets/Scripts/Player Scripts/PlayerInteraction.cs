@@ -4,15 +4,31 @@ using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    public DetectionHandler detectionHandler;
+    [SerializeField] private DetectionHandler detectionHandler;
+    [SerializeField] private Canvas pressE;
+
+    private void Start()
+    {
+        pressE.enabled = false;
+    }
 
     void Update()
     {
         Interactable interactable = detectionHandler.GetDetectedInteractable();
 
-        if(interactable != null && Input.GetKeyDown(KeyCode.E))
+        if(interactable != null)
         {
-            interactable.Interact();
+            pressE.enabled = true;
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                interactable.Interact();
+            }
+        }
+
+        else
+        {
+            pressE.enabled = false;
         }
     }
 }
