@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor.AI;
 using Unity.AI.Navigation;
 public class GameManager : MonoBehaviour
 {
