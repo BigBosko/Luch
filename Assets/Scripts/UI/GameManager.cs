@@ -11,10 +11,5 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Main Menu");
     }
-
-    public void RebuildNavMesh()
-    {
-        navMeshSurface.BuildNavMesh();
-    }
 }
 

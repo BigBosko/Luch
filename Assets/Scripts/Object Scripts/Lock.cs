@@ -25,7 +25,7 @@ public class Lock : Interactable
             if (inventory.HasRightKey(lockId))
             {
                 isLocked = false;
-
+                door.ToggleDoor();
             }
             else
             {

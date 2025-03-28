@@ -126,7 +126,6 @@ namespace NavKeypad
             onAccessGranted?.Invoke();
             panelMesh.material.SetVector("_EmissionColor", screenGrantedColor * screenIntensity);
             audioSource.PlayOneShot(accessGrantedSfx);
-            door.GetComponent<MechanicalDoor>().ToggleDoor();
         }
 
     }

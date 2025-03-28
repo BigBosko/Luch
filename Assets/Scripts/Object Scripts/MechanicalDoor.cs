@@ -10,12 +10,14 @@ public class MechanicalDoor : MonoBehaviour
     private void Start()
     {
         closePos = transform.position;
+        //openPos = new Vector3(closePos.x, closePos.y + 6f, closePos.z);
         openPos = new Vector3(closePos.x, closePos.y + 6f, closePos.z);
         isOpen = false;
     }
 
     public void ToggleDoor()
     {
+
         if (isOpen)
         {
             isOpen = false;
