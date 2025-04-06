@@ -12,7 +12,7 @@ public class Door : Interactable
     [SerializeField] private Vector3 closedRotation = Vector3.zero;
     private bool isOpen;
 
-    private void Start()
+    protected virtual void Start()
     {
         lockComp = GetComponentInChildren<Lock>();
 
