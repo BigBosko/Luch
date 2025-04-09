@@ -8,15 +8,18 @@ public class EscapeMenu : MonoBehaviour
     [SerializeField] private Canvas pauseMenu;
 
     private bool isPaused = false;
+
     void Start()
     {
         pauseMenu.enabled = false;
+        // Initialize cursor state on game start
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        isPaused = !isPaused;
+        // Only check for Escape key press
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             PauseGame();
@@ -30,17 +33,15 @@ public class EscapeMenu : MonoBehaviour
 
         if (isPaused)
         {
-            Time.timeScale = 0;
+            Time.timeScale = 0; // Freeze game time
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-
         else
         {
+            Time.timeScale = 1; // Resume game time
             Cursor.lockState = CursorLockMode.Locked;
-            Time.timeScale = 1;
             Cursor.visible = false;
         }
-
     }
 }
