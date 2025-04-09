@@ -51,6 +51,7 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.isStopped = true;
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
