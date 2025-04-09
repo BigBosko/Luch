@@ -7,6 +7,11 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class EnemyAI : MonoBehaviour
 {
+    [Header("Audio")]
+    public AudioClip patrolAudio;
+    public AudioClip chaseAudio;
+    private AudioSource audioSource;
+
     [Header("Detection")]
     public LayerMask playerLayer;  // Only detect player layer
     public Light spotLight;
@@ -46,6 +51,12 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.loop = true;
     }
 
 
@@ -83,10 +94,19 @@ public class EnemyAI : MonoBehaviour
 
     void Chase()
     {
+        // Existing chase logic
         agent.speed = chaseSpeed;
         UpdateLight(chaseLightDistance, chaseLightAngle, ChaseLightIntensity, 1f);
         agent.destination = lastPosition;
 
+        // Play chase audio if not already playing
+        if (audioSource.clip != chaseAudio || !audioSource.isPlaying)
+        {
+            audioSource.clip = chaseAudio;
+            audioSource.Play();
+        }
+
+        // Existing logic to transition to scouting
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
             if (!isPlayerDetected)
@@ -100,10 +120,19 @@ public class EnemyAI : MonoBehaviour
 
     void Patrol()
     {
+        // Existing patrol logic
         agent.speed = patrolSpeed;
         agent.destination = waypoints[targetWaypoint].position;
-        UpdateLight(patrolLightDistance, patrolLightAngle, patrolLightIntensity, 1f); // Lerp transition
+        UpdateLight(patrolLightDistance, patrolLightAngle, patrolLightIntensity, 1f);
 
+        // Play patrol audio if not already playing
+        if (audioSource.clip != patrolAudio || !audioSource.isPlaying)
+        {
+            audioSource.clip = patrolAudio;
+            audioSource.Play();
+        }
+
+        // Existing waypoint logic
         if (agent.remainingDistance < waypointThreshold)
         {
             targetWaypoint = (targetWaypoint + 1) % waypoints.Length;
