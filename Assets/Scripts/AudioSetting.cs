@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 public class AudioSetting : MonoBehaviour
 {
-    [SerializeField] private AudioMixer mixer;  // Reference to your AudioMixer
-    private Slider volumeSlider;
-    private const string parameter = "MasterAudioMixer";  // This should match the exposed parameter name in your AudioMixer
+    [SerializeField] private AudioMixer mixer;
+    [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Slider SFXslider;
+    private const string parameter = "MasterAudioMixer";
 
     void Start()
     {
-        volumeSlider = GetComponent<Slider>();  // Get the slider component
 
         if (PlayerPrefs.HasKey("masterVolume"))
         {
@@ -19,10 +19,10 @@ public class AudioSetting : MonoBehaviour
         else
         {
             SetMasterVolume();
+            SetSFXVolume();
         }
     }
 
-    // This method sets the volume of the AudioMixer based on the slider value
     public void SetMasterVolume()
     {
         float volume = volumeSlider.value;
@@ -30,10 +30,19 @@ public class AudioSetting : MonoBehaviour
         PlayerPrefs.SetFloat("masterVolume", volume);
     }
 
+    public void SetSFXVolume()
+    {
+        float volume = SFXslider.value;
+        mixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", volume);
+    }
+
     private void LoadVolume()
     {
         volumeSlider.value = PlayerPrefs.GetFloat("masterVolume");
+        volumeSlider.value = PlayerPrefs.GetFloat("SFXVolume");
 
         SetMasterVolume();
+        SetSFXVolume();
     }
 }

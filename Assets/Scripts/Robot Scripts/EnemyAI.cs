@@ -208,6 +208,7 @@ public class EnemyAI : MonoBehaviour
 
         while (totalRotation < 360f)
         {
+            Detect();
             float rotationThisFrame = rotationSpeed * Time.deltaTime;
             transform.Rotate(0, rotationThisFrame, 0);
             totalRotation += rotationThisFrame;
