@@ -57,17 +57,19 @@ public class EnemyAI : MonoBehaviour
             lastPosition = player.position;
             Chase();
         }
-        else if (!isPlayerDetected)
+        else if (isChasing)
         {
-            if (isChasing)
-            {
-                Chase();
-            }
-            else if (!isChasing)
-            {
-                Patrol();
-            }
+            Chase();
         }
+        else if (isScouting)
+        {
+            //nc
+        }
+        else
+        {
+            Patrol();
+        }
+
         Detect();
     }
 
@@ -110,10 +112,10 @@ public class EnemyAI : MonoBehaviour
 
     public void Scout()
     {
-
         if (!isScouting)
         {
             isScouting = true;
+            agent.isStopped = true; // Stop the agent from moving
             UpdateLight(scoutLightDistance, scoutLightAngle, scoutLightIntensity, 1f);
             StartCoroutine(RotateWhileScouting());
         }
@@ -171,21 +173,25 @@ public class EnemyAI : MonoBehaviour
 
     private IEnumerator RotateWhileScouting()
     {
-        Quaternion startRotation = transform.rotation;
-        Quaternion targetRotation = startRotation * Quaternion.Euler(0, 360, 0); // Rotate around Y-axis
-        float elapsedTime = 0f;
+        float totalRotation = 0f;
+        float rotationSpeed = 360f / scoutDuration; // Degrees per second
+        agent.updateRotation = false; // Disable agent's automatic rotation
 
-        while (elapsedTime < scoutDuration)
+        while (totalRotation < 360f)
         {
-            elapsedTime += Time.deltaTime;
-            float progress = elapsedTime / scoutDuration; // Normalize progress
-            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, progress);
+            float rotationThisFrame = rotationSpeed * Time.deltaTime;
+            transform.Rotate(0, rotationThisFrame, 0);
+            totalRotation += rotationThisFrame;
             yield return null;
         }
 
-        transform.rotation = targetRotation; // Ensure exact final rotation
-        
+        // Ensure the final rotation is precise
+        transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+
+        // Re-enable agent control
+        agent.updateRotation = true;
         isScouting = false;
+        agent.isStopped = false;
     }
 
     IEnumerator LerpLight(float targetRange, float targetAngle, float targetIntensity, float duration)
