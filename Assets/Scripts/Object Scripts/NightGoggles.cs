@@ -17,7 +17,7 @@ public class NightGoggles : Interactable
             inventory.hasGoggles = true;
             Destroy(gameObject);
 
-            playerLight.range = 8;
+            playerLight.range = 22;
 
         }
     }
