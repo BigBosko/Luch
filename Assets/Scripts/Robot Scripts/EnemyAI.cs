@@ -13,7 +13,7 @@ public class EnemyAI : MonoBehaviour
     private AudioSource audioSource;
 
     [Header("Detection")]
-    public LayerMask playerLayer;  // Only detect player layer
+    public LayerMask playerLayer;
     public Light spotLight;
     public bool isPlayerDetected;
     private float currentLightDistance;
