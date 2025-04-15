@@ -27,6 +27,7 @@ public class FirstPersonController : MonoBehaviour
     public StaminaControll staminaController;
     public Crouch crouchController;
 
+
     private float moveSpeed;
     private Vector3 moveDirection;
 

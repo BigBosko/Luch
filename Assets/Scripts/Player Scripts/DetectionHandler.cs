@@ -18,9 +18,12 @@ public class DetectionHandler : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, interactionRange, interactableLayer))
         {
-            detectedInteractable = hit.transform.GetComponent<Interactable>();
-            Debug.Log(detectedInteractable.name);
-            return detectedInteractable;
+            if(hit.transform.GetComponent<Interactable>() != null)
+            {
+                detectedInteractable = hit.transform.GetComponent<Interactable>();
+                //Debug.Log(detectedInteractable.name);
+                return detectedInteractable;
+            }
         }
 
         detectedInteractable = null;
