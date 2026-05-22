@@ -21,4 +21,5 @@ This repository was used mainly for version control and backup during developmen
 - Git and GitHub
 
 ## Note
-As a solo project, the main focus was on building and programming gameplay systems rather than creating all visual assets from scratch, so the project also uses some AI-generated meshes and other third-party assets.
+As a solo project with limited development time, the main focus was on building and programming gameplay systems rather than creating all visual assets from scratch, so the project also uses some AI-generated meshes and other third-party assets. 
+A more detailed project review is available in the `PorociloMatura.docx` file, written in Slovene.
