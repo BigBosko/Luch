@@ -95,7 +95,6 @@ public class EnemyAI : MonoBehaviour
 
     void Chase()
     {
-        // Existing chase logic
         agent.speed = chaseSpeed;
         UpdateLight(chaseLightDistance, chaseLightAngle, ChaseLightIntensity, 1f);
         agent.destination = lastPosition;
@@ -158,7 +157,7 @@ public class EnemyAI : MonoBehaviour
         currentLightAngle = isChasing ? chaseLightAngle : patrolLightAngle;
 
         Transform lightOrigin = spotLight.transform;
-        isPlayerDetected = false; // Reset detection state
+        isPlayerDetected = false;
 
         Collider[] detectedColliders = Physics.OverlapSphere(lightOrigin.position, currentLightDistance, playerLayer);
 
@@ -204,8 +203,8 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator RotateWhileScouting()
     {
         float totalRotation = 0f;
-        float rotationSpeed = 360f / scoutDuration; // Degrees per second
-        agent.updateRotation = false; // Disable agent's automatic rotation
+        float rotationSpeed = 360f / scoutDuration; // Degrees/second
+        agent.updateRotation = false; // Disable agents automatic rotation
 
         while (totalRotation < 360f)
         {
@@ -237,7 +236,7 @@ public class EnemyAI : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration; // Normalized time (0 to 1)
 
-            // Lerp between start and target values
+            //Lerp between start and target values
             spotLight.range = Mathf.Lerp(startRange, targetRange, t);
             spotLight.spotAngle = Mathf.Lerp(startAngle, targetAngle, t);
             spotLight.intensity = Mathf.Lerp(startIntensity, targetIntensity, t);
